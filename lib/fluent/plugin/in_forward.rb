@@ -94,6 +94,8 @@ module Fluent
           raise Fluent::ConfigError, "<client> sections required if allow_anonymous_source disabled"
         end
 
+        @nodes = []
+
         @security.clients.each do |client|
           if client.host && client.network
             raise Fluent::ConfigError, "both of 'host' and 'network' are specified for client"
@@ -114,7 +116,6 @@ module Fluent
                         rescue ArgumentError => e
                           raise Fluent::ConfigError, "network '#{client.network}' address format is invalid"
                         end
-          @nodes = []
           @nodes.push({
               address: source_addr,
               shared_key: (client.shared_key || @security.shared_key),
