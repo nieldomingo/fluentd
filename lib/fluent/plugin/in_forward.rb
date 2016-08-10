@@ -272,7 +272,7 @@ module Fluent
 
         bytes += data.bytesize
         feeder.call(data)
-       end
+      end
     end
 
     def response(option)
