@@ -53,7 +53,7 @@ module Fluent
     desc 'The timeout time when sending event logs.'
     config_param :send_timeout, :time, default: 60
     desc 'The transport protocol to use for heartbeats.(udp,tcp,none)'
-    config_param :heartbeat_type, :enum, list: [:tcp, :udp, :none], default: :udp
+    config_param :heartbeat_type, :enum, list: [:tcp, :udp, :none], default: :tcp
     desc 'The interval of the heartbeat packer.'
     config_param :heartbeat_interval, :time, default: 1
     desc 'The wait time before accepting a server fault recovery.'
