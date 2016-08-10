@@ -398,7 +398,6 @@ class ForwardOutputTest < Test::Unit::TestCase
 
     output_conf = %[
       send_timeout 51
-      heartbeat_type udp
       <security>
         self_hostname localhost
         shared_key fluentd-sharedkey
@@ -459,7 +458,6 @@ class ForwardOutputTest < Test::Unit::TestCase
 
     output_conf = %[
       send_timeout 51
-      heartbeat_type udp
       <security>
         self_hostname localhost
         shared_key fluentd-sharedkey

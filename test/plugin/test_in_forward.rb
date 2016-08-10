@@ -952,7 +952,7 @@ class ForwardInputTest < Test::Unit::TestCase
   end
 
   def simulate_auth_sequence(io, shared_key=SHARED_KEY, username=USER_NAME, password=USER_PASSWORD)
-    auth_response_timeout = 10
+    auth_response_timeout = 30
     shared_key_salt = 'salt'
 
     # reading helo
