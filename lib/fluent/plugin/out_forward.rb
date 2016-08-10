@@ -441,7 +441,7 @@ module Fluent
           end
 
           option = { 'size' => chunk.size_of_events }
-          option['chunk'] = Base64.encode64(chunk.unique_id) if @require_ack_response
+          option['chunk'] = Base64.encode64(chunk.unique_id) if @sender.require_ack_response
 
           # out_forward always uses Raw32 type for content.
           # Raw16 can store only 64kbytes, and it should be much smaller than buffer chunk size.
