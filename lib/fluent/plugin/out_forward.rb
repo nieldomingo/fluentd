@@ -162,6 +162,7 @@ module Fluent
       @rand_seed = Random.new.seed
       rebuild_weight_array
       @rr = 0
+      @usock = nil
 
       unless @heartbeat_type == :none
         @loop = Coolio::Loop.new
@@ -299,7 +300,7 @@ module Fluent
         end
         begin
           log.trace "sending heartbeat", host: n.host, port: n.port, heartbeat_type: @heartbeat_type
-          n.usock = @usock
+          n.usock = @usock if @usock
           n.send_heartbeat
         rescue Errno::EAGAIN, Errno::EWOULDBLOCK, Errno::EINTR, Errno::ECONNREFUSED
           log.debug "failed to send heartbeat packet", host: n.host, port: n.port, heartbeat_type: @heartbeat_type, error: $!
