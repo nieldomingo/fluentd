@@ -504,9 +504,9 @@ module Fluent
         when :tcp
           sock = connect
           begin
-            opt = [1, @send_timeout.to_i].pack('I!I!')  # { int l_onoff; int l_linger; }
+            opt = [1, @sender.send_timeout.to_i].pack('I!I!')  # { int l_onoff; int l_linger; }
             sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, opt)
-            # opt = [@send_timeout.to_i, 0].pack('L!L!')  # struct timeval
+            # opt = [@sender.send_timeout.to_i, 0].pack('L!L!')  # struct timeval
             # sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_SNDTIMEO, opt)
 
             ## don't send any data to not cause a compatibility problem
