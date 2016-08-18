@@ -134,6 +134,9 @@ module Fluent
       output.router = @event_router if output.respond_to?(:router=)
       output.configure(conf)
       @outputs << output
+      if output.respond_to?(:outputs)
+        @outputs.push(*output.outputs)
+      end
       @event_router.add_rule(pattern, output)
 
       output
