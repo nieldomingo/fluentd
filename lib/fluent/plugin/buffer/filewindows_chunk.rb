@@ -46,6 +46,16 @@ module Fluent
           @meta.close
         end
         
+        def open(&block)
+          if @chunk.closed?
+            @chunk = File.open(@path, 'rb+')
+            @chunk.set_encoding(Encoding::ASCII_8BIT)
+            @chunk.sync = true
+            @chunk.binmode
+          end
+          super
+        end
+        
         def close
           if @chunk.closed?
             @chunk = File.open(@path, 'rb+')
