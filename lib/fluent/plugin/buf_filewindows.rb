@@ -15,11 +15,48 @@
 #
 
 require 'fluent/plugin/buf_file'
+require 'fluent/plugin/buffer/filewindows_chunk'
 
 module Fluent
   module Plugin
     class FileWindowsBuffer < Fluent::Plugin::FileBuffer
       Plugin.register_buffer('filewindows', self)
+      
+      def resume
+        stage = {}
+        queue = []
+
+        Dir.glob(@path) do |path|
+          m = new_metadata() # this metadata will be overwritten by resuming .meta file content
+                             # so it should not added into @metadata_list for now
+          mode = Fluent::Plugin::Buffer::FileWindowsChunk.assume_chunk_state(path)
+          if mode == :unknown
+            log.debug "uknown state chunk found", path: path
+            next
+          end
+
+          chunk = Fluent::Plugin::Buffer::FileWindowsChunk.new(m, path, mode) # file chunk resumes contents of metadata
+          case chunk.state
+          when :staged
+            stage[chunk.metadata] = chunk
+          when :queued
+            queue << chunk
+          end
+        end
+
+        queue.sort_by!{ |chunk| chunk.modified_at }
+
+        return stage, queue
+      end
+
+      def generate_chunk(metadata)
+        # FileChunk generates real path with unique_id
+        if @file_permission
+          Fluent::Plugin::Buffer::FileWindowsChunk.new(metadata, @path, :create, perm: @file_permission)
+        else
+          Fluent::Plugin::Buffer::FileWindowsChunk.new(metadata, @path, :create)
+        end
+      end
     end
   end
 end

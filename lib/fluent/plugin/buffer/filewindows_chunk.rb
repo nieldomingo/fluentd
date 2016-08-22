@@ -20,6 +20,53 @@ module Fluent
   module Plugin
     class Buffer
       class FileWindowsChunk < FileChunk
+        def read
+          if @state == :queued
+            @chunk = File.open(@path, 'rb+')
+            @chunk.set_encoding(Encoding::ASCII_8BIT)
+            @chunk.sync = true
+            @chunk.binmode
+            content = @chunk.read
+            @chunk.close
+            content
+          else
+            super
+          end
+        end
+
+        def load_existing_enqueued_chunk(path)
+          super
+          @chunk.close
+          @state = :queued
+        end
+        
+        def enqueued!
+          super
+          @chunk.close
+          @meta.close
+        end
+        
+        def close
+          if @chunk.closed?
+            @chunk = File.open(@path, 'rb+')
+            @chunk.set_encoding(Encoding::ASCII_8BIT)
+            @chunk.sync = true
+            @chunk.binmode
+          end
+          size = @chunk.size
+          @chunk.close
+          @meta.close if @meta # meta may be missing if chunk is queued at first
+          if size == 0
+            File.unlink(@path, @meta_path)
+          end
+        end
+
+        def purge
+          @chunk.close unless @chunk.closed?
+          @meta.close if @meta and not @meta.closed?
+          @bytesize = @size = @adding_bytes = @adding_size = 0
+          File.unlink(@path, @meta_path)
+        end
       end
     end
   end

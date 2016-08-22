@@ -7,13 +7,13 @@ require 'fluent/env'
 
 require 'msgpack'
 
-module FluentPluginFileBufferTest
+module FluentPluginFileWindowsBufferTest
   class DummyOutputPlugin < Fluent::Plugin::Output
     Fluent::Plugin.register_output('buffer_file_test_output', self)
   end
 end
 
-class FileBufferTest < Test::Unit::TestCase
+class FileWindowsBufferTest < Test::Unit::TestCase
   def metadata(timekey: nil, tag: nil, variables: nil)
     Fluent::Plugin::Buffer::Metadata.new(timekey, tag, variables)
   end
@@ -46,7 +46,7 @@ class FileBufferTest < Test::Unit::TestCase
     end
 
     test 'path should include * normally' do
-      d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       p = Fluent::Plugin::FileWindowsBuffer.new
       p.owner = d
       p.configure(config_element('buffer', '', {'path' => File.join(@dir, 'buffer.*.file')}))
@@ -54,7 +54,7 @@ class FileBufferTest < Test::Unit::TestCase
     end
 
     test 'existing directory will be used with additional default file name' do
-      d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       p = Fluent::Plugin::FileWindowsBuffer.new
       p.owner = d
       p.configure(config_element('buffer', '', {'path' => @dir}))
@@ -62,7 +62,7 @@ class FileBufferTest < Test::Unit::TestCase
     end
 
     test 'unexisting path without * handled as directory' do
-      d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       p = Fluent::Plugin::FileWindowsBuffer.new
       p.owner = d
       p.configure(config_element('buffer', '', {'path' => File.join(@dir, 'buffer')}))
@@ -77,7 +77,7 @@ class FileBufferTest < Test::Unit::TestCase
       FileUtils.rm_r @bufdir if File.exist?(@bufdir)
 
       Fluent::Test.setup
-      @d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      @d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       @p = Fluent::Plugin::FileWindowsBuffer.new
       @p.owner = @d
       @p.configure(config_element('buffer', '', {'path' => @bufpath}))
@@ -241,7 +241,7 @@ class FileBufferTest < Test::Unit::TestCase
       FileUtils.rm_r @bufdir if File.exist?(@bufdir)
 
       Fluent::Test.setup
-      @d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      @d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       @p = Fluent::Plugin::FileWindowsBuffer.new
       @p.owner = @d
       @p.configure(config_element('buffer', '', {'path' => @bufpath}))
@@ -329,7 +329,7 @@ class FileBufferTest < Test::Unit::TestCase
       @bufpath = File.join(@bufdir, 'etest.*.log')
 
       Fluent::Test.setup
-      @d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      @d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       @p = Fluent::Plugin::FileWindowsBuffer.new
       @p.owner = @d
       @p.configure(config_element('buffer', '', {'path' => @bufpath}))
@@ -443,7 +443,7 @@ class FileBufferTest < Test::Unit::TestCase
       @bufpath = File.join(@bufdir, 'etest.*.log')
 
       Fluent::Test.setup
-      @d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      @d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       @p = Fluent::Plugin::FileWindowsBuffer.new
       @p.owner = @d
       @p.configure(config_element('buffer', '', {'path' => @bufpath}))
@@ -527,7 +527,7 @@ class FileBufferTest < Test::Unit::TestCase
       @bufpath = File.join(@bufdir, 'etest.*.log')
 
       Fluent::Test.setup
-      @d = FluentPluginFileBufferTest::DummyOutputPlugin.new
+      @d = FluentPluginFileWindowsBufferTest::DummyOutputPlugin.new
       @p = Fluent::Plugin::FileWindowsBuffer.new
       @p.owner = @d
       @p.configure(config_element('buffer', '', {'path' => @bufpath}))
